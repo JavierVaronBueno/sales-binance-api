@@ -11,7 +11,9 @@ export class CsvService {
 
     const results = [];
     return new Promise((resolve, reject) => {
-      const stream = Readable.from(buffer); // Crea un flujo a partir del buffer
+      const bomFreeBuffer = buffer.toString('utf8').replace(/^\uFEFF/, '');
+      const stream = Readable.from(bomFreeBuffer); // Crea un flujo a partir del buffer
+
       stream
         .pipe(csvParser({ separator: ';' })) // Usa el separador punto y coma
         .on('data', (data) => {
@@ -26,6 +28,7 @@ export class CsvService {
           console.error('Error while parsing:', error); // Muestra cualquier error que ocurra
           reject(error);
         });
+
     });
   }
 }
