@@ -2,9 +2,10 @@
 import { Module } from '@nestjs/common';
 import { CsvService } from './csv.service';
 import { CsvController } from './csv.controller';
+import { SalesModule } from '../sales/sales.module';
 
 @Module({
-  imports: [],
+  imports: [SalesModule],
   controllers: [CsvController],
   providers: [CsvService],
   exports: [CsvService],

@@ -1,22 +1,29 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { Sales } from './schemas/sales.schema';
+import { Types } from 'mongoose'; // Importa `Types` de mongoose para usar `ObjectId`
 
 @Controller('sales')
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
-
-  // Endpoint para crear una venta
+  
   @Post('upload')
   async createSale(
     @Body('amount') amount: number,
     @Body('value') value: number,
     @Body('purchases') purchasesIds: string[],
   ): Promise<Sales> {
-    return this.salesService.createSale(amount, value, purchasesIds);
+    const purchases = purchasesIds.map(id => new Types.ObjectId(id));
+
+    const saleData = {
+      amount,
+      value,
+      purchases,
+    };
+
+    return this.salesService.createSale(saleData);
   }
 
-  // Endpoint para obtener todas las ventas
   @Get('get')
   async getAllSales(): Promise<Sales[]> {
     return this.salesService.getAllSales();
